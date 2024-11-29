@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .form-container {
+            width: 300px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        p {
+            text-align: center;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+        .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .modal.hidden {
+        display: none;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-content h2 {
+        color: green;
+    }
+
+    .modal-content button {
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .modal-content button:hover {
+        background-color: #218838;
+    }
+    </style>
+</head>
+<body>
+    <div id="popupMessage" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="popupTitle">Success</h2>
+            <p id="popupText">User registered successfully!</p>
+            <button id="closePopup">Close</button>
+        </div>
+    </div>
+    <div class="form-container">
+        <h2>Register</h2>
+        <form id="registerForm">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Register</button>
+        </form>
+        <p>Already have an account? <a href="login.html">Login here</a></p>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const popup = document.getElementById('popupMessage');
+    const popupTitle = document.getElementById('popupTitle');
+    const popupText = document.getElementById('popupText');
+
+    try {
+        const response = await fetch('http://localhost:5500/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: e.target.username.value,
+                email: e.target.email.value,
+                password: e.target.password.value,
+            }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            popupTitle.textContent = 'Success';
+            popupText.textContent = result.message || 'User registered successfully!';
+            popup.classList.remove('hidden'); // Show modal
+        } else {
+            popupTitle.textContent = 'Error';
+            popupText.textContent = result.message || 'Registration failed!';
+            popup.classList.remove('hidden'); // Show modal
+        }
+    } catch (error) {
+        popupTitle.textContent = 'Error';
+        popupText.textContent = 'An error occurred. Please try again.';
+        popup.classList.remove('hidden'); // Show modal
+    }
+
+    // Close the modal
+    document.getElementById('closePopup').addEventListener('click', () => {
+        popup.classList.add('hidden');
+    });
+});
+
+    </script>
+</body>
+</html>
