@@ -131,15 +131,16 @@
     const popupText = document.getElementById('popupText');
 
     try {
-        const response = await fetch('http://localhost:5500/api/auth/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                username: e.target.username.value,
-                email: e.target.email.value,
-                password: e.target.password.value,
-            }),
-        });
+        const response = await fetch('/api/auth/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        username: e.target.username.value,
+        email: e.target.email.value,
+        password: e.target.password.value,
+    }),
+});
+
 
         const result = await response.json();
 
