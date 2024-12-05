@@ -7,7 +7,17 @@ const cors = require('cors');
 // Connect to MongoDB
 
 
-mongoose.connect('mongodb://localhost:27017/user_auth')
+require('dotenv').config({ path: './D.env' });
+
+
+const uri = process.env.MONGODB_URI;
+if (!uri) {
+  console.error('Error: MONGODB_URI is not defined in the environment variables.');
+  process.exit(1); // Exit the application
+}
+
+mongoose
+  .connect(uri) // No need for `useNewUrlParser` or `useUnifiedTopology`
   .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
